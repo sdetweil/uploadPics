@@ -6,7 +6,7 @@ sample module structure
  */
 
 
-Module.register("SampleModule", {
+Module.register("uploadPics", {
 	// define variables used by module, but not in config data
 	some_variable:  true,
 	some_other_variable: "a string",
@@ -17,15 +17,16 @@ Module.register("SampleModule", {
 	// anything here in defaults will be added to the config data
 	// and replaced if the same thing is provided in config
 	defaults: {
-		message: "default message if none supplied in config.js"
+		message: "default message if none supplied in config.js",
+		dest:'../modules/MMM-ImagesPhotos/uploads'
 	},
 
 	init: function(){
-		Log.log(this.name + " is in init!");
+		Log.log(this.name + " is in init! ");
 	},
 
 	start: function(){
-		Log.log(this.name + " is starting!");
+		Log.log(this.name + " is starting!" + this.file('node_helper.js'));
 	},
 
 	loaded: function(callback) {
@@ -35,7 +36,7 @@ Module.register("SampleModule", {
 
 	// return list of other functional scripts to use, if any (like require in node_helper)
 	getScripts: function() {
-	return	[
+	return	[ 'qrcode.min.js'
 			// sample of list of files to specify here, if no files,do not use this routine, or return empty list
 
 			//'script.js', // will try to load it from the vendor folder, otherwise it will load is from the module folder.
@@ -70,16 +71,15 @@ Module.register("SampleModule", {
 
 
 	// only called if the module header was configured in module config in config.js
-	getHeader: function() {
+	/*getHeader: function() {
 		return this.data.header + " Foo Bar";
-	},
+	},*/
 
 	// messages received from other modules and the system (NOT from your node helper)
 	// payload is a notification dependent data structure
 	notificationReceived: function(notification, payload, sender) {
 		// once everybody is loaded up
 		if(notification==="ALL_MODULES_STARTED"){
-			// send our config to our node_helper
 			this.sendSocketNotification("CONFIG",this.config)
 		}
 		if (sender) {
@@ -93,7 +93,7 @@ Module.register("SampleModule", {
 	// payload is a notification dependent data structure, up to you to design between module and node_helper
 	socketNotificationReceived: function(notification, payload) {
 		Log.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
-		if(notification === "message_from_helper"){
+		if(notification === "qr"){
 			this.config.message = payload;
 			// tell mirror runtime that our data has changed,
 			// we will be called back at GetDom() to provide the updated content
@@ -121,14 +121,16 @@ Module.register("SampleModule", {
 		// if user supplied message text in its module config, use it
 		if(this.config.hasOwnProperty("message")){
 			// using text from module config block in config.js
-			wrapper.innerHTML = this.config.message;
-		}
-		else{
-		// use hard coded text
-			wrapper.innerHTML = "Hello world!";
+			//wrapper.innerText = this.config.message;
+			var canvas=document.createElement('canvas')
+			canvas.className='qr';
+			QRCode.toCanvas(canvas, this.config.message, function (error) {
+			    if (error) Log.error(error)
+			    Log.log('success!');
+			  })
+			wrapper.appendChild(canvas)
 		}
 
-		// pass the created content back to MM to add to DOM.
 		return wrapper;
 	},
 
