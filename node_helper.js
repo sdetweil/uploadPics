@@ -26,7 +26,7 @@ module.exports = NodeHelper.create({
 		// get the absolute path to the image storage folder
 		const p = path.resolve( '.', 'modules',  this.config.dest)
 		console.log("p="+p)
-		const qrcp = spawn('qrcp', ['-k', '--output', p, 'receive']);
+		const qrcp = spawn('qrcp', ['-k', '--interface', 'any',  '--output', p, 'receive']);
 
 		console.log
 
