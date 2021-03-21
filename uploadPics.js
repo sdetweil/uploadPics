@@ -36,7 +36,7 @@ Module.register("uploadPics", {
 
 	// return list of other functional scripts to use, if any (like require in node_helper)
 	getScripts: function() {
-	return	[ 'qrcode.min.js'
+	return	[ this.file('qrcode.min.js')
 			// sample of list of files to specify here, if no files,do not use this routine, or return empty list
 
 			//'script.js', // will try to load it from the vendor folder, otherwise it will load is from the module folder.
