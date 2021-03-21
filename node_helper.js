@@ -24,9 +24,10 @@ module.exports = NodeHelper.create({
 
 	startServer(){
 		// get the absolute path to the image storage folder
-		const p = path.resolve( '.', 'modules',  this.config.dest)
+		const p = path.resolve( __dirname, "..",  this.config.dest)
+		const config = path.resolve( __dirname, "./qrcp.json")
 		console.log("p="+p)
-		const qrcp = spawn('qrcp', ['-k', '--interface', 'any',  '--output', p, 'receive']);
+		const qrcp = spawn('qrcp', ['-k', '-c',  config ,  '--output', p, 'receive']);
 
 		console.log
 
@@ -43,7 +44,7 @@ module.exports = NodeHelper.create({
 		  		//fs.writeFileSync('modules/'+this.name+'/'+this.qrname,v)
 		  		this.sendSocketNotification("qr",v)
 			}
-			else{		
+			else{
 					console.log(data.toString())
 					if(data.toString().includes('File transfer completed')){
 						exec('exiftran -ai '+p+'/*.jpg')
