@@ -1,3 +1,14 @@
 #!/bin/bash
 cp node_modules/qrcode/build/qrcode.min.js .
-sudo apt-get -y install qrcp exiftran
+arch=$(uname -m)
+if [ $arch == 'armv7l' ]; then
+   arch=armv7
+fi
+fn=$(curl -sL https://github.com/claudiodangelis/qrcp/releases | grep -m1 $arch | awk -F'"'  '{print $2}')
+if [ '$fn'. != '.' ]; then
+curl -sL https://github.com$fn > xx.deb
+sudo dpkg -i xx.deb
+else
+    echo 'unable to find qrpc module for $arch'
+fi
+sudo apt-get -y install exiftran
