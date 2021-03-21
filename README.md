@@ -20,7 +20,7 @@
             config: {
             	dest:  "..", // relative path to module showing images, place to put new images
                 // for MMM-ImagesPhotos dest is (the default)
-		//  ../module/MMMM-ImagesPhotos/uploads
+		//  ../modules/MMMM-ImagesPhotos/uploads
             }
         },
 
