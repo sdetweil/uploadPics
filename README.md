@@ -19,8 +19,8 @@
             position: 'bottom_left',  //module position
             config: {
             	dest:  "..", // relative path to module showing images, place to put new images
-                // MMM-IamgesPhotos is 
-                //  ../module/MMMM-ImagesPhotos/uploads
+                // for MMM-ImagesPhotos dest is (the default)
+		//  ../module/MMMM-ImagesPhotos/uploads
             }
         },
 
