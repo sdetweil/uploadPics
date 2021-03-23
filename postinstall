@@ -9,35 +9,35 @@ fn=$(curl -sL https://github.com/claudiodangelis/qrcp/releases | grep -m1 $arch 
 if [ '$fn'. != '.' ]; then
 # download the  file for this machine
 curl -sL https://github.com$fn > xx.deb
-# install qrcp 
+# install qrcp
 sudo dpkg -i xx.deb
 else
     echo 'unable to find qrpc module for $arch'
 fi
 # add the image orientation tool
 sudo apt-get -y install exiftran
-# watch out for multiple networks, just write the config file 
+# watch out for multiple networks, just write the config file
 nets=$(ip link show | grep mtu | grep -v lo | grep up | grep -v -i docker | grep "state UP" | awk -F: '{print $2}' | awk '{print $1}')
 # if only one network
 if [ $(echo $nets | wc -w ) -eq 1 ]; then
    # write it out to conf file
    echo "{ \"interface\": \"$nets\" }" >qrcp.json
 else
-        # split names into an array
-        adapters=($nets) # split to array $diffs
+    # split names into an array
+    adapters=($nets) # split to array $diffs
 
-        # if there are different files (array size greater than zero)
-        if [ ${#adapters[@]} -gt 0 ]; then
-                for adapter in "${adapters[@]}"
-                do
-			# check to see if this is a wireless network (mirror on the wall)
-                        f=$(iwconfig $adapter | grep ESSID | awk '{print $1}')
-                        if [ "$f". != '.' ]; then
-				# use this adapter
-                                echo "{ \"interface\": \"$f\" }" >qrcp.json
-				# done with list 
-                                break;
-                        fi
-                done
-        fi
+    # if there are different files (array size greater than zero)
+    if [ ${#adapters[@]} -gt 0 ]; then
+        for adapter in "${adapters[@]}"
+        do
+	         # check to see if this is a wireless network (mirror on the wall)
+             f=$(iwconfig $adapter | grep ESSID | awk '{print $1}')
+             if [ "$f". != '.' ]; then
+		        # use this adapter
+                echo "{ \"interface\": \"$f\" }" >qrcp.json
+		        # done with list
+                break;
+             fi
+        done
+    fi
 fi

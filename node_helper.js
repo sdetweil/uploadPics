@@ -8,68 +8,79 @@ const path = require('path')
 module.exports = NodeHelper.create({
 	//regExp : /[a-zA-Z]/g,
 	first:true,
-	qrname:'12345.png',
+	config:{debug:false},
+	files:[],
 
 	init(){
-		console.log("init module helper " +this.name+ JSON.stringify(this.data));
+		if(this.config.debug) console.log("init module helper " +this.name+ JSON.stringify(this.data));
 	},
 
 	start() {
-		console.log('Starting module helper:' +this.name+ JSON.stringify(this.data));
+		if(this.config.debug) console.log('Starting module helper:' +this.name+ JSON.stringify(this.data));
 	},
 
 	stop(){
-		console.log('Stopping module helper: ' +this.name);
+		if(this.config.debug) console.log('Stopping module helper: ' +this.name);
 	},
 
 	startServer(){
+		var self = this
 		// get the absolute path to the image storage folder
 		const p = path.resolve( __dirname, "..",  this.config.dest)
 		const config = path.resolve( __dirname, "./qrcp.json")
-		console.log("p="+p)
-		const qrcp = spawn('qrcp', ['-k', '-c',  config ,  '--output', p, 'receive']);
-
-		console.log
+		if(self.config.debug) console.log("p="+p)
+		//		const qrcp = spawn('qrcp', ['-k', '--output', p, 'receive']);
+		const qrcp = spawn('qrcp', ['-k', "-c",  config ,  '--output', p, 'receive']);
 
 		qrcp.stdout.on('data', (data) => {
-			if(this.first) {
-				this.first=false;
-				//console.log("d="+JSON.stringify(data))
+			if(self.first) {
+				self.first=false;
+				//if(self.config.debug) console.log("d="+JSON.stringify(data))
 				let v = data.toString().split('\n')[1]
-				console.log('data='+data.toString())
-				console.log('v='+v)
+				if(self.config.debug) console.log('data='+data.toString())
+				if(self.config.debug) console.log('v='+v)
 				//v=v.split('\n').slice(1,-2).join('\n')
-				console.log("new line")
-		  		console.log(`stdout: ${v}`);
-		  		//fs.writeFileSync('modules/'+this.name+'/'+this.qrname,v)
-		  		this.sendSocketNotification("qr",v)
+				if(self.config.debug) console.log("new line")
+		  		if(self.config.debug) console.log(`stdout: ${v}`);
+		  		self.sendSocketNotification("qr",v)
 			}
 			else{
-					console.log(data.toString())
+					if(self.config.debug) console.log(data.toString())
+
 					if(data.toString().includes('File transfer completed')){
-						exec('exiftran -ai '+p+'/*.jpg')
+						if(self.config.debug)
+							console.log("process list of files =  "+ JSON.stringify(self.files))
+						self.files.forEach(fn =>{
+							if(self.config.debug)
+								console.log("processing for "+fn)
+							exec((self.config.needSudo?'sudo ':'')+'exiftran -ai '+"'"+fn+"'")
+						})
+						self.files=[]
+						//exec('exiftran -ai '+p+'/*.jpg')
+					}
+					if(data.toString().includes('Transferring file:')){
+						let x =  data.toString().split(':')[1].split('\n')
+						if(self.config.debug)
+							console.log(" fn list ="+ JSON.stringify(x,' ',2)+" fn="+x[0].toString().trim())
+						self.files.push(x[0].toString().trim())
 					}
 				}
 		});
 		qrcp.stderr.on('data', (data)=>{
-			console.log("error="+data)
+			if(self.config.debug) console.log("error="+data)
 		})
 	},
 	// handle messages from our module// each notification indicates a different messages
 	// payload is a data structure that is different per message.. up to you to design this
 	socketNotificationReceived(notification, payload) {
-		console.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
 		// if config message from module
 		if (notification === "CONFIG") {
 			// save payload config info
 			this.config=payload
+			if(this.config.debug) console.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
 			this.startServer()
-			// wait 15 seconds, send a message back to module
-			setTimeout(()=> { this.sendSocketNotification("message_from_helper"," this is a test_message")}, 15000)
+		} else{
+			if(this.config.debug) console.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
 		}
-		else if(notification === "????2") {
-		}
-
 	},
-
 });
