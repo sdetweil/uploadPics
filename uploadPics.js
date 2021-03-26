@@ -11,7 +11,7 @@ Module.register("uploadPics", {
 	// anything here in defaults will be added to the config data
 	// and replaced if the same thing is provided in config
 	defaults: {
-		message: "default message if none supplied in config.js",
+		message: "check the dest configuration in config.js",
 		dest:'../modules/MMM-ImagesPhotos/uploads',
 		debug: false,
 		needSudo: false,
