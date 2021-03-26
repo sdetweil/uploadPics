@@ -67,7 +67,7 @@ module.exports = NodeHelper.create({
 				}
 		});
 		qrcp.stderr.on('data', (data)=>{
-			if(self.config.debug) console.log("error="+data)
+			console.log("error="+data)
 		})
 	},
 	// handle messages from our module// each notification indicates a different messages
