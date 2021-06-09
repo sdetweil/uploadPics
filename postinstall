@@ -1,5 +1,5 @@
 #!/bin/bash
-cp node_modules/qrcode/build/qrcode.min.js .
+
 arch=$(uname -m)
 if [ $arch == 'armv7l' ]; then
    arch=armv7

@@ -1,22 +1,22 @@
 {
-  "name": "samplemodule",
+  "name": "uploadPics",
   "version": "1.0.0",
-  "description": "",
-  "main": "SampleModule.js",
+  "description": "module for MagicMirror to enable uploading pics from mobile devices via displayed QRCode",
+  "main": "uploadPics.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "./postinstall"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sdetweil/SampleModule.git"
+    "url": "git+https://github.com/sdetweil/uploadPics.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sdetweil/SampleModule/issues"
+    "url": "https://github.com/sdetweil/uploadPics/issues"
   },
-  "homepage": "https://github.com/sdetweil/SampleModule#readme",
+  "homepage": "https://github.com/sdetweil/uploadPics#readme",
   "dependencies": {
     "qrcode": "^1.4.4"
   }

@@ -5,18 +5,17 @@ sample module structure
 
  */
 
-
 Module.register("uploadPics", {
 
 	// anything here in defaults will be added to the config data
 	// and replaced if the same thing is provided in config
 	defaults: {
-		message: "default message if none supplied in config.js",
 		dest:'../modules/MMM-ImagesPhotos/uploads',
 		debug: false,
 		needSudo: false,
 	},
 	config:{ debug: false},
+
 	init: function(){
 		if(this.config.debug) Log.log(this.name + " is in init! ");
 	},
@@ -31,11 +30,11 @@ Module.register("uploadPics", {
 	},
 
 	// return list of other functional scripts to use, if any (like require in node_helper)
-	getScripts: function() {
+/*	getScripts: function() {
 	return	[ this.file('qrcode.min.js')
 
 		]
-	},
+	}, */
 
 	// return list of stylesheet files to use if any
 	getStyles: function() {
@@ -48,6 +47,9 @@ Module.register("uploadPics", {
 	notificationReceived: function(notification, payload, sender) {
 		// once everybody is loaded up
 		if(notification==="ALL_MODULES_STARTED"){
+			this.config.address=config.address
+			this.config.ipWhitelist=config.ipWhitelist
+			this.config.port=config.port
 			this.sendSocketNotification("CONFIG",this.config)
 		}
 	},
@@ -56,7 +58,7 @@ Module.register("uploadPics", {
 	// payload is a notification dependent data structure, up to you to design between module and node_helper
 	socketNotificationReceived: function(notification, payload) {
 		if(this.config.debug) Log.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
-		if(notification === "qr"){
+		if(notification === "qr_url"){
 			this.config.message = payload;
 			// tell mirror runtime that our data has changed,
 			// we will be called back at GetDom() to provide the updated content
@@ -76,7 +78,6 @@ Module.register("uploadPics", {
 	resume: function(){
 
 	},
-
 	// this is the major worker of the module, it provides the displayable content for this module
 	getDom: function() {
 		var wrapper = document.createElement("div");
@@ -84,14 +85,10 @@ Module.register("uploadPics", {
 		// if user supplied message text in its module config, use it
 		if(this.config.hasOwnProperty("message")){
 			// using text from module config block in config.js
-			//wrapper.innerText = this.config.message;
-			var canvas=document.createElement('canvas')
-			canvas.className='qr';
-			QRCode.toCanvas(canvas, this.config.message, function (error) {
-			    if (error) Log.error(error)
-			    if(this.config.debug) Log.log('success!');
-			  })
-			wrapper.appendChild(canvas)
+        let image = document.createElement("img");
+        image.src = this.config.message;
+        image.className = "qr";
+        wrapper.appendChild(image);
 		}
 
 		return wrapper;
