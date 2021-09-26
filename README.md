@@ -4,11 +4,11 @@
 
 # INSTRUCTIONS
    
-# cd ~/MagicMirror/modules
- git clone https://github.com/sdetweil/uploadPics
+	cd ~/MagicMirror/modules
+	git clone https://github.com/sdetweil/uploadPics 
   
-# cd ~/MagicMirror/modules/uploadPics
- npm install
+	cd ~/MagicMirror/modules/uploadPics
+ 	npm install
   
 
 
@@ -20,15 +20,15 @@
             config: {
             	dest:  "..", // relative path to module showing images, place to put new images
                 // for MMM-ImagesPhotos dest is (the default)
-		//  ../modules/MMMM-ImagesPhotos/uploads
+		//  ../modules/MMM-ImagesPhotos/uploads
             }
         },
 
 
 
-   #CUSTOM CSS OPTIONS
+ # CUSTOM CSS OPTIONS
    
-Don't like the qr colors? or size Change them!!  Here are some things you can change by putting them in your custom.css file!
+Don't like the QR colors or size? Change them!!  Here are some things you can change by putting them in your custom.css file!
 
 
       .uploadPics qr {
