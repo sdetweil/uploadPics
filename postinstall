@@ -6,16 +6,17 @@ if [ $arch == 'armv7l' ]; then
 fi
 ver=$(curl -sL https://github.com/claudiodangelis/qrcp | grep -i "/claudiodangelis/qrcp/releases/tag/" | awk -F/ {'print $6'} | sed -e 's/href="\(.*\)"/\1/' | awk -F\" {'print $1'})
 # get the latest release for this hardware architecture, from the list of releases
-fn=$(curl -sL https://github.com/claudiodangelis/qrcp/releases/expanded_assets/$ver | grep -m1 $arch | awk -F'"'  '{print $2}')
+fn=$(curl -sL https://github.com/claudiodangelis/qrcp/releases | grep $ver | grep $arch | grep href | grep deb| awk -F'"'  '{print $2}')
 
 if [ '$fn'. != '.' ]; then
 # download the  file for this machine
-curl -sL https://github.com$fn > xx.deb
+curl -sL $fn > xx.deb
 # install qrcp
 sudo dpkg -i xx.deb
 else
     echo 'unable to find qrpc module for $arch'
 fi
+
 # add the image orientation tool
 sudo apt-get -y install exiftran
 # watch out for multiple networks, just write the config file
