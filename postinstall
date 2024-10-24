@@ -1,18 +1,24 @@
 #!/bin/bash
-
+GH_PREFIX=https://github.com
 arch=$(uname -m)
 if [ $arch == 'armv7l' ]; then
    arch=armv7
 fi
-ver=$(curl -sL https://github.com/claudiodangelis/qrcp | grep -i "/claudiodangelis/qrcp/releases/tag/" | awk -F/ {'print $6'} | sed -e 's/href="\(.*\)"/\1/' | awk -F\" {'print $1'})
+if [ $arch == 'x86_64' ]; then
+   arch=amd64
+fi
+ver=$(curl -sL ${GH_PREFIX}/claudiodangelis/qrcp | grep -i "/claudiodangelis/qrcp/releases/tag/" | awk -F/ {'print $6'} | sed -e 's/href="\(.*\)"/\1/' | awk -F\" {'print $1'})
 # get the latest release for this hardware architecture, from the list of releases
-fn=$(curl -sL https://github.com/claudiodangelis/qrcp/releases | grep $ver | grep $arch | grep href | grep deb| awk -F'"'  '{print $2}')
+fn=$(curl -sL ${GH_PREFIX}/claudiodangelis/qrcp/releases | grep $ver | grep $arch | grep href | grep deb| awk -F'"'  '{print $2}')
 
 if [ '$fn'. != '.' ]; then
-# download the  file for this machine
-curl -sL $fn > xx.deb
-# install qrcp
-sudo dpkg -i xx.deb
+   if [ ${fn:0:17} != ${GH_PREFIX} ]; then
+        fn=${GH_PREFIX}${fn}
+   fi
+   # download the  file for this machine
+   curl -sL $fn > xx.deb
+   # install qrcp
+   sudo dpkg -i xx.deb
 else
     echo 'unable to find qrpc module for $arch'
 fi
