@@ -7,6 +7,10 @@ fi
 if [ $arch == 'x86_64' ]; then
    arch=amd64
 fi
+if [ $arch == 'aarch64' ]; then
+  arch = arm64
+fi
+
 ver=$(curl -sL ${GH_PREFIX}/claudiodangelis/qrcp | grep -i "/claudiodangelis/qrcp/releases/tag/" | awk -F/ {'print $6'} | sed -e 's/href="\(.*\)"/\1/' | awk -F\" {'print $1'})
 # get the latest release for this hardware architecture, from the list of releases
 fn=$(curl -sL ${GH_PREFIX}/claudiodangelis/qrcp/releases | grep $ver | grep $arch | grep href | grep deb| awk -F'"'  '{print $2}')
