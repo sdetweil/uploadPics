@@ -1,3 +1,7 @@
 node_modules
 package-lock.json
 qrcode.min.js
+qrcp.exe
+qrcp.json
+*.gz
+LICENSE
