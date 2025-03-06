@@ -2,6 +2,9 @@ node_modules
 package-lock.json
 qrcode.min.js
 qrcp.exe
+qrcp
 qrcp.json
 *.gz
 LICENSE
+.DS_STORE
+
