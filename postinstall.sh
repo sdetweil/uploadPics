@@ -19,9 +19,9 @@ if [ $os != 'darwin' ]; then
    fn=$(curl -sL ${GH_PREFIX}/claudiodangelis/qrcp/releases | grep $ver | grep $arch | grep href | grep deb| awk -F'"'  '{print $2}')
 else
    #  arm64 not built yet 3/6/25
-   if [ $arch == 'arm64' ]; then 
-      arch=amd64
-   fi
+   #if [ $arch == 'arm64' ]; then 
+   #   arch=amd64
+   #fi
    fn=$(curl -sL ${GH_PREFIX}/claudiodangelis/qrcp/releases | grep $ver | grep $os | grep $arch | grep href | awk -F'"'  '{print $2}')
 
 fi
@@ -38,10 +38,10 @@ if [ '$fn'. != '.' ]; then
    curl -sL $fn > xx.$suffix
    if [ $os == 'darwin' ]; then 
       tar -xf xx.${suffix}
-      tar -xf data.tar.gz
+      #tar -xf data.tar.gz
 
       # Copy the binary
-      sudo cp usr/bin/qrcp /usr/local/bin/qrcp
+      cp qrcp /usr/local/bin/qrcp
       # Set execution permissions
       sudo chmod +x /usr/local/bin/qrcp
       git checkout README.md >/dev/null
@@ -54,15 +54,15 @@ else
 fi
 
 # add the image orientation tool
-if [ $os == 'darwin' ];then
-   brew install exiftran >/dev/null 2>&1
-else
-   sudo apt-get -y install exiftran >/dev/null
-fi
+#if [ $os == 'darwin' ];then
+#   brew install exiftran >/dev/null 2>&1
+#else
+#   sudo apt-get -y install exiftran >/dev/null
+#fi
 # watch out for multiple networks, just write the config file
 if [ $os == 'darwin' ]; then
-   na=$(arp -a | grep ? | grep -m1 -v bridge | awk '{print $6}')
-   nets=$(ipconfig getifaddr $na)
+   nets=$(arp -a | grep ? | grep -m1 -v bridge | awk '{print $6}')
+   #nets=$(ipconfig getifaddr $na)
 else
    nets=$(ip link show | grep mtu | grep -v lo | grep up | grep -v -i docker | grep "state UP" | awk -F: '{print $2}' | awk '{print $1}')
 fi
