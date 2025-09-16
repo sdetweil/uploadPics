@@ -32,7 +32,7 @@ else
   suffix=deb
 fi
 if [ '$fn'. != '.' ]; then
-   if [ ${fn:0:17} != ${GH_PREFIX} ]; then
+   if [ ${fn:0:18} != ${GH_PREFIX} ]; then
         fn=${GH_PREFIX}${fn}
    fi
    curl -sL $fn > xx.$suffix
